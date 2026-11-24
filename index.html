@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>High Street Data | Data engineering consulting</title>
+<meta name="description" content="High Street Data builds reliable data pipelines, warehouses and dashboards for small and mid-sized teams. Data engineering consulting out of the Merrimack Valley, MA.">
+<meta name="theme-color" content="#F4F2EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314161A'/%3E%3Ctext x='16' y='21.5' font-family='monospace' font-size='14' font-weight='700' fill='%2352E3FF' text-anchor='middle'%3EHS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F2EC; --paper-2:#EAE7DE; --card:#FFFFFF; --line:#D6D2C6;
+  --ink:#14161A; --ink-soft:#3B3F47; --muted:#6A6E76;
+  --signal:#0B7C90; --signal-bright:#52E3FF; --signal-ink:#062A31;
+  --night:#14161A; --night-2:#1E2127;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --pad:clamp(20px,5.5vw,80px);
+  --max:1180px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%;display:block}
+a{color:var(--signal)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+h1,h2,h3{margin:0;line-height:1.05;letter-spacing:-.02em;font-weight:700}
+p{margin:0}
+.wrap{padding-inline:var(--pad)}
+.inner{max-width:var(--max);margin-inline:auto}
+.mono{font-family:var(--mono)}
+.tag{font-family:var(--mono);font-size:14px;color:var(--signal);letter-spacing:.02em}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:14px 26px;border-radius:10px;font-weight:600;font-size:17px;text-decoration:none;border:1.5px solid transparent;transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-ink:hover{background:#000}
+.btn-line{border-color:var(--ink);color:var(--ink)}
+.btn-signal{background:var(--signal-bright);color:var(--signal-ink)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;padding:16px var(--pad);padding-top:calc(16px + env(safe-area-inset-top,0px));background:rgba(244,242,236,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none;font-weight:700;font-size:19px}
+.brand-mark{width:40px;height:40px;border-radius:9px;background:var(--ink);color:var(--signal-bright);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px}
+.nav-links{display:flex;align-items:center;gap:30px;font-weight:500}
+.nav-links a:not(.btn){color:var(--ink);text-decoration:none}
+.nav-links a:not(.btn):hover{color:var(--signal)}
+.menu-btn{display:none;width:46px;height:46px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;place-items:center}
+
+/* hero */
+.hero{padding-block:clamp(56px,9vw,120px) clamp(48px,7vw,96px)}
+.hero .inner{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(32px,5vw,72px);align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:26px}
+.hero h1{font-size:clamp(48px,6.4vw,88px)}
+.hero h1 em{font-style:normal;color:var(--signal)}
+.lede{font-size:clamp(19px,1.7vw,23px);color:var(--ink-soft);max-width:560px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+
+/* pipeline diagram */
+.pipe{background:var(--night);color:#E8EAED;border-radius:20px;padding:clamp(22px,3vw,34px);font-family:var(--mono);font-size:14px;box-shadow:0 30px 60px -30px rgba(20,22,26,.55)}
+.pipe-bar{display:flex;gap:7px;margin-bottom:22px}
+.pipe-bar i{width:11px;height:11px;border-radius:50%;background:#3A3E46}
+.pipe-bar span{margin-left:auto;color:#8A8F98;font-size:12px}
+.pipe-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px}
+.stack{display:flex;flex-direction:column;gap:8px}
+.node{border:1px solid #343841;background:var(--night-2);border-radius:8px;padding:9px 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.node.hot{border-color:var(--signal-bright);color:var(--signal-bright)}
+.arrow{color:var(--signal-bright);font-size:18px}
+.pipe-log{margin-top:22px;border-top:1px dashed #343841;padding-top:16px;display:flex;flex-direction:column;gap:6px;color:#9AA0A9;font-size:13px}
+.pipe-log b{color:#7EE787;font-weight:600}
+
+/* sections */
+.section{padding-block:clamp(64px,9vw,128px)}
+.section-alt{background:var(--paper-2);border-block:1px solid var(--line)}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 48px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,56px)}
+.head h2{font-size:clamp(36px,4.4vw,58px);max-width:700px;margin-top:12px}
+.head p{color:var(--ink-soft);max-width:440px;font-size:19px}
+
+/* services */
+.services{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.svc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(26px,3vw,38px);display:flex;flex-direction:column;gap:14px}
+.svc h3{font-size:26px}
+.svc p{color:var(--ink-soft)}
+.svc ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.svc li{font-family:var(--mono);font-size:13px;padding:6px 10px;border-radius:6px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft)}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:step}
+.step{border-top:2px solid var(--ink);padding-top:22px;display:flex;flex-direction:column;gap:12px}
+.step .tag{font-size:15px}
+.step h3{font-size:24px}
+.step p{color:var(--ink-soft)}
+
+/* fit */
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.fit-col{border-radius:18px;padding:clamp(26px,3vw,38px)}
+.fit-yes{background:var(--night);color:#E8EAED}
+.fit-yes h3{color:var(--signal-bright)}
+.fit-no{border:1.5px dashed var(--line);background:transparent}
+.fit-col h3{font-size:22px;margin-bottom:18px}
+.fit-col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.fit-col li{padding-left:28px;position:relative}
+.fit-col li::before{position:absolute;left:0;font-family:var(--mono);font-weight:600}
+.fit-yes li::before{content:"✓";color:#7EE787}
+.fit-no li::before{content:"–";color:var(--muted)}
+.fit-no li{color:var(--ink-soft)}
+
+/* about */
+.about .inner{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,90px);align-items:start}
+.about h2{font-size:clamp(36px,4.4vw,58px);margin-top:12px}
+.about-copy{display:flex;flex-direction:column;gap:18px;font-size:19px;color:var(--ink-soft)}
+.about-copy strong{color:var(--ink)}
+
+/* contact */
+.contact{margin-inline:var(--pad);margin-bottom:clamp(48px,7vw,96px);border-radius:28px;background:var(--night);color:#E8EAED;padding:clamp(36px,6vw,80px)}
+.contact .inner{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,5vw,60px);align-items:center}
+.contact h2{font-size:clamp(38px,4.8vw,64px);color:#fff}
+.contact p{margin-top:18px;font-size:19px;color:#B9BEC6;max-width:560px}
+.contact-cta{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.contact-cta a:not(.btn){color:var(--signal-bright);font-family:var(--mono);font-size:15px}
+
+footer{border-top:1px solid var(--line);padding:32px var(--pad)}
+footer .inner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:15px}
+footer nav{display:flex;gap:22px;flex-wrap:wrap}
+footer a{color:var(--muted)}
+
+@media (max-width:980px){
+  .hero .inner{grid-template-columns:1fr}
+  .pipe{max-width:620px}
+  .about .inner{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  body{font-size:17px}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--paper);border-bottom:1px solid var(--line);padding:8px var(--pad) 20px}
+  .nav-links.open{display:flex}
+  .nav-links a:not(.btn){padding:14px 0;border-bottom:1px solid var(--line)}
+  .nav-links .btn{margin-top:14px}
+  .menu-btn{display:grid}
+  .ctas .btn{flex:1 1 100%}
+  .services,.steps,.fit{grid-template-columns:1fr}
+  .contact{border-radius:22px}
+  .contact .inner{grid-template-columns:1fr}
+  .contact-cta{align-items:stretch}
+  .pipe-grid{grid-template-columns:1fr;gap:8px}
+  .arrow{transform:rotate(90deg);justify-self:center}
+  footer .inner{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="inner">
+    <a class="brand" href="#top" aria-label="High Street Data home">
+      <span class="brand-mark">HS</span>High Street Data
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#services">Services</a>
+      <a href="#process">How it works</a>
+      <a href="#about">About</a>
+      <a class="btn btn-ink" href="#contact" style="min-height:42px;padding:10px 20px">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="inner">
+      <div class="hero-copy">
+        <div class="tag">// data engineering consulting · Merrimack Valley, MA</div>
+        <h1>Data you can <em>trust</em>, delivered on schedule.</h1>
+        <p class="lede">I build and fix the plumbing behind your reports: pipelines, warehouses and dashboards that run every morning without anyone babysitting them.</p>
+        <div class="ctas">
+          <a class="btn btn-ink" href="#contact">Book a free 30-min call</a>
+          <a class="btn btn-line" href="#services">See services</a>
+        </div>
+      </div>
+      <div class="pipe" aria-hidden="true">
+        <div class="pipe-bar"><i></i><i></i><i></i><span>daily_load.py</span></div>
+        <div class="pipe-grid">
+          <div class="stack">
+            <div class="node">Shopify</div>
+            <div class="node">QuickBooks</div>
+            <div class="node">CRM export</div>
+            <div class="node">spreadsheets</div>
+          </div>
+          <div class="arrow">→</div>
+          <div class="stack">
+            <div class="node hot">ingest</div>
+            <div class="node hot">clean + test</div>
+            <div class="node hot">model</div>
+          </div>
+          <div class="arrow">→</div>
+          <div class="stack">
+            <div class="node">warehouse</div>
+            <div class="node">dashboards</div>
+            <div class="node">alerts</div>
+          </div>
+        </div>
+        <div class="pipe-log">
+          <span>06:00 &nbsp;run started</span>
+          <span>06:04 &nbsp;412,880 rows loaded · 0 failed checks</span>
+          <span>06:05 &nbsp;<b>✓ dashboards refreshed</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt wrap" id="services" aria-labelledby="services-h">
+    <div class="inner">
+      <div class="head">
+        <div>
+          <div class="tag">// services</div>
+          <h2 id="services-h">From scattered spreadsheets to a single source of truth.</h2>
+        </div>
+        <p>Scoped, fixed-price projects or ongoing support, whichever fits. Each one ends with documentation and a handoff, so your team owns it.</p>
+      </div>
+      <div class="services">
+        <article class="svc">
+          <h3>Data pipelines</h3>
+          <p>Automated, scheduled pulls from your apps, APIs and files into one place. Includes retries, logging and alerts when something breaks.</p>
+          <ul><li>Python</li><li>SQL</li><li>Airflow</li><li>APIs</li></ul>
+        </article>
+        <article class="svc">
+          <h3>Warehouse setup</h3>
+          <p>A clean, modeled data warehouse sized for your business, built to scale with you without a giant cloud bill.</p>
+          <ul><li>Snowflake</li><li>BigQuery</li><li>Postgres</li><li>dbt</li></ul>
+        </article>
+        <article class="svc">
+          <h3>Dashboards &amp; reporting</h3>
+          <p>The numbers you actually check, in one dashboard that refreshes itself. Replaces manual weekly copy-and-paste reports.</p>
+          <ul><li>Power BI</li><li>Looker Studio</li><li>Metabase</li></ul>
+        </article>
+        <article class="svc">
+          <h3>Audits &amp; cleanup</h3>
+          <p>Already have a setup that's slow, fragile or nobody trusts? I'll review it, write up what's wrong and fix the parts that matter most.</p>
+          <ul><li>data quality</li><li>cost review</li><li>documentation</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="process" aria-labelledby="process-h">
+    <div class="inner">
+      <div class="head">
+        <div>
+          <div class="tag">// how it works</div>
+          <h2 id="process-h">Simple, scoped, no surprises.</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="tag">01</span>
+          <h3>Free intro call</h3>
+          <p>30 minutes to talk through where your data lives today, what's painful and what you want to see.</p>
+        </div>
+        <div class="step">
+          <span class="tag">02</span>
+          <h3>Written proposal</h3>
+          <p>A clear scope, timeline and fixed price, so you know exactly what you're getting before any work starts.</p>
+        </div>
+        <div class="step">
+          <span class="tag">03</span>
+          <h3>Build &amp; hand off</h3>
+          <p>Regular check-ins while I build, then documentation and a walkthrough so your team can run it on their own.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt wrap" aria-labelledby="fit-h">
+    <div class="inner">
+      <div class="head">
+        <div>
+          <div class="tag">// is this a fit?</div>
+          <h2 id="fit-h">Built for teams without a data department.</h2>
+        </div>
+      </div>
+      <div class="fit">
+        <div class="fit-col fit-yes">
+          <h3>Great fit</h3>
+          <ul>
+            <li>Small and mid-sized businesses outgrowing spreadsheets</li>
+            <li>Teams with data in five different tools and no single view</li>
+            <li>Companies with a fragile pipeline someone left behind</li>
+            <li>Founders who want reporting without hiring full-time yet</li>
+          </ul>
+        </div>
+        <div class="fit-col fit-no">
+          <h3>Probably not a fit</h3>
+          <ul>
+            <li>Large enterprise programs that need a full team on-site</li>
+            <li>24/7 on-call operations support</li>
+            <li>Pure data science or ML model research</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap about" id="about" aria-labelledby="about-h">
+    <div class="inner">
+      <div>
+        <div class="tag">// about</div>
+        <h2 id="about-h">Hi, I'm Trevor.</h2>
+      </div>
+      <div class="about-copy">
+        <p>I'm a <strong>working data engineer</strong>. By day I build and maintain production data pipelines, so this is the same work I do every week, offered to teams that can't justify a full-time hire.</p>
+        <p>High Street Data is the consulting side of High Street Co. LLC, a small business I run out of the Merrimack Valley in Massachusetts. Projects are handled directly by me, start to finish. I won't hand you off to anyone.</p>
+        <p>I care about boring, reliable systems: tested, documented and cheap to run. If it needs a 40-page manual to keep alive, it isn't done.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="inner">
+      <div>
+        <h2 id="contact-h">Let's look at your data.</h2>
+        <p>Tell me a little about your business and what you're trying to fix. I'll reply within two business days to set up a free intro call.</p>
+      </div>
+      <div class="contact-cta">
+        <a class="btn btn-signal" href="mailto:highstreetcollc@gmail.com?subject=High%20Street%20Data%20inquiry" style="font-size:19px;padding:18px 30px">Email me</a>
+        <a href="mailto:highstreetcollc@gmail.com">highstreetcollc@gmail.com</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="inner">
+    <span><strong style="color:var(--ink)">High Street Data</strong> · a High Street Co. LLC business</span>
+    <nav aria-label="Footer">
+      <a href="https://www.highstreetcollc.com">High Street Co.</a>
+      <a href="mailto:highstreetcollc@gmail.com">Contact</a>
+      <span>© <span id="year">2026</span> High Street Co. LLC</span>
+    </nav>
+  </div>
+</footer>
+
+<script>
+const btn = document.getElementById("menuBtn"), links = document.getElementById("navLinks");
+btn.addEventListener("click", () => {
+  const open = links.classList.toggle("open");
+  btn.setAttribute("aria-expanded", open);
+  btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+});
+links.addEventListener("click", e => { if (e.target.closest("a")) { links.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); } });
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
